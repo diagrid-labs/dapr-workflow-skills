@@ -46,7 +46,8 @@ dotnet add <ProjectName> package Dapr.Workflow --version 1.16.1
     │   └── launchSettings.json
     ├── Models/
     │   └── <ModelName>.cs
-    ├── <WorkflowName>.cs
+    ├── Workflows/
+    │   └── <WorkflowName>.cs
     └── Activities/
         └── <ActivityName>.cs
 ```
@@ -77,7 +78,7 @@ Uses `AddDaprWorkflow` to register workflow and activity types. Uses `DaprWorkfl
 
 ## Workflow Class
 
-Inherits from `Workflow<TInput, TOutput>`, overrides `RunAsync`, and orchestrates activities via `context.CallActivityAsync`. Must be `internal sealed`. See `reference.md` for full example, key points, determinism rules, and workflow patterns (chaining, fan-out/fan-in, sub-workflows).
+Inherits from `Workflow<TInput, TOutput>`, overrides `RunAsync`, and orchestrates activities via `context.CallActivityAsync`. Must be `internal sealed`. Place in a `Workflows` folder/namespace. See `reference.md` for full example, key points, determinism rules, and workflow patterns (chaining, fan-out/fan-in, sub-workflows).
 
 ## Activity Class
 

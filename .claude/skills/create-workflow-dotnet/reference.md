@@ -196,6 +196,7 @@ internal sealed class MyWorkflow : Workflow<WorkflowInput, WorkflowOutput>
 - The second generic type parameter (`TOutput`) is the workflow output type (e.g., `WorkflowOutput`).
 - Use `context.CallActivityAsync<TOutput>(activityName, input)` to call an activity.
 - Use `nameof()` to reference activity names to avoid magic strings.
+- Place workflow classes in a `Workflows` folder/namespace for organization.
 - Activities can be chained by passing the output of one activity as the input to the next.
 - Map between workflow and activity model types as needed.
 - The workflow class should be `internal sealed`.
@@ -315,7 +316,7 @@ internal sealed class MonitorWorkflow : Workflow<int, string>
 
 ## local.http
 
-Create a `local.http` file in the project folder to test the workflow endpoints:
+Create a `local.http` file in the project root to test the workflow endpoints:
 
 ```http
 @host = http://localhost:<app-port>
