@@ -96,3 +96,4 @@ docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
 ```
 
 Then open `http://localhost:8080` in a browser to view workflow instances, their status, and execution history.
+
