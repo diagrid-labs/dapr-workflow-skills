@@ -1,5 +1,62 @@
 # Reference: Dapr Workflow .NET Application
 
+## .gitignore
+
+Create a `.gitignore` file in the project root with common Visual Studio / .NET ignore patterns:
+
+```gitignore
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build logs
+*.log
+msbuild*.wrn
+msbuild*.err
+
+## NuGet
+**/[Pp]ackages/*
+*.nupkg
+*.snupkg
+.nuget/
+**/packages/*
+
+## dotnet tool
+.config/dotnet-tools.json
+
+## Project-level
+*.[Cc]ache
+**/Properties/launchSettings.json
+
+## OS files
+.DS_Store
+Thumbs.db
+```
+
 ## dapr.yaml
 
 Create a `dapr.yaml` multi-app run file in the project root. This file configures the Dapr sidecar and points to the resources folder.
@@ -8,14 +65,14 @@ Create a `dapr.yaml` multi-app run file in the project root. This file configure
 version: 1
 common:
   resourcesPath: ./resources
+  appLogDestination: fileAndConsole
+  daprdLogDestination: fileAndConsole
 apps:
   - appID: <app-id>
     appDirPath: <ProjectName>
     appPort: <app-port>
     daprHTTPPort: 3555
     command: ["dotnet", "run"]
-    appLogDestination: console
-    daprdLogDestination: console
 ```
 
 - `resourcesPath` points to the folder containing Dapr component definitions.

@@ -35,6 +35,7 @@ dotnet add <ProjectName> package Dapr.Workflow --version 1.16.1
 
 ```
 <ProjectRoot>/
+├── .gitignore
 ├── dapr.yaml
 ├── local.http
 ├── resources/
@@ -51,6 +52,10 @@ dotnet add <ProjectName> package Dapr.Workflow --version 1.16.1
     └── Activities/
         └── <ActivityName>.cs
 ```
+
+### .gitignore
+
+Visual Studio style `.gitignore` file in the project root. Ignores build output (`bin`, `obj`), debug/release folders, and other common .NET artifacts. See `reference.md` for full example.
 
 ### dapr.yaml
 
