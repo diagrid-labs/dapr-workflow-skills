@@ -22,4 +22,11 @@ Create a plan to build a Dapr workflow app in .NET. The workflow automates the o
   3. UpdateOrgChart
   4. SendWelcomePackage
 
+The input for the workflow contains the following fields:
+
+- First name
+- Last name
+- Address
+- Department
+  
 The input records for the 4 parallel activities include the employeeId. The workflow output should include the employeeId.
