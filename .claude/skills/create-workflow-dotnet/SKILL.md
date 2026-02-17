@@ -9,16 +9,42 @@ description: This skill creates a Dapr workflow application in .NET. Use this sk
 
 This skill describes how to create a Dapr Workflow application using .NET.
 
+## Execution Order
+
+You MUST complete the prerequisite checks before proceeding to Project Setup. If any prerequisite is missing, inform the user with install instructions and do NOT continue until the issue is resolved.
+
 ## Prerequisites
 
-This skill requires the C# LSP plugin that can be installed with  `claude plugin install csharp-lsp@claude-plugins-official`
+The following must be installed by the user before this skill can run:
 
-To build and run the .NET Dapr Workflow applications the following is required: 
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
+- [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
 - [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
-- Docker or Podman (required for running Dapr locally with Redis)
+
+Additional runtime dependencies (handled during project setup):
+
 - NuGet package: `Dapr.Workflow` version `1.16.1`
-- [Diagrid Dev Dashboard](https://www.diagrid.io/blog/improving-the-local-dapr-workflow-experience-diagrid-dashboard)
+- Start the [Diagrid Dev Dashboard](https://www.diagrid.io/blog/improving-the-local-dapr-workflow-experience-diagrid-dashboard): `docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest`
+
+## Prerequisite Checks
+
+**IMPORTANT: Run ALL of these checks BEFORE creating any files or folders. If any check fails, stop and inform the user with the relevant install link from the Prerequisites section. Do NOT proceed to Project Setup until all checks pass.**
+
+### Step 1: Install the C# LSP plugin
+
+Run `claude plugin install csharp-lsp@claude-plugins-official` to ensure the C# language server is available.
+
+### Step 2: Check .NET SDK
+
+Run `dotnet --version` and verify the output starts with `10.`. If not installed or the version is below 10, inform the user they need to install the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download).
+
+### Step 3: Check Docker or Podman
+
+Run `docker info` to check if Docker is running. If that fails, run `podman info` to check for Podman. At least one container runtime must be available and running. If neither is available, inform the user they need to install [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation).
+
+### Step 4: Check Dapr CLI
+
+Run `dapr --version` to verify the Dapr CLI is installed. If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
 
 ## Project Setup
 
@@ -126,3 +152,12 @@ diagrid dev run -p <ProjectName> -f dapr.yaml
 
 This uses the same `dapr.yaml` multi-app run file but connects to Catalyst instead of a local Dapr sidecar, giving access to the Catalyst dashboard for monitoring and managing workflow executions.
 
+## Verify
+
+**IMPORTANT
+Always end the creation with these verification steps:**
+
+1. Run `dotnet restore` on the csproj file to check for build errors.
+2. Run `dapr run -f .` in the project root to start the workflow app.
+3. Invoke the `/start` endpoint from the http file to start a workflow instance.
+4. Inspect the workflow execution using the Diagrid Dev dashboard.
