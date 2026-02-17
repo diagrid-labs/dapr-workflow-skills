@@ -1,4 +1,9 @@
-# Dapr Workflow .NET Application
+---
+name: create-workflow-dotnet
+description: This skill creates a Dapr workflow application in .NET. Use this skill when the user asks to "create a workflow in .NET", "write a .NET workflow application" or "build a workflow app in C#".
+---
+
+# Create Dapr Workflow .NET Application
 
 ## Overview
 
@@ -34,6 +39,8 @@ dotnet add <ProjectName> package Dapr.Workflow --version 1.16.1
     ├── Program.cs
     ├── Properties/
     │   └── launchSettings.json
+    ├── Models/
+    │   └── <ModelName>.cs
     ├── <WorkflowName>.cs
     └── Activities/
         └── <ActivityName>.cs
@@ -50,7 +57,7 @@ common:
 apps:
   - appID: <app-id>
     appDirPath: <ProjectName>
-    appPort: 5255
+    appPort: <app-port>
     daprHTTPPort: 3555
     command: ["dotnet", "run"]
     appLogDestination: console
@@ -98,7 +105,7 @@ The application port must match the `appPort` specified in `dapr.yaml`. Create a
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5255",
+      "applicationUrl": "http://localhost:<app-port>",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -107,7 +114,7 @@ The application port must match the `appPort` specified in `dapr.yaml`. Create a
 }
 ```
 
-- The `applicationUrl` port (5255) must match the `appPort` in `dapr.yaml` so the Dapr sidecar can communicate with the application.
+- The `applicationUrl` port (<app-port>) must match the `appPort` in `dapr.yaml`.
 
 ### .csproj
 
@@ -129,6 +136,26 @@ The `.csproj` file should look like this:
 </Project>
 ```
 
+## Models
+
+Define record types for workflow and activity input/output in a `Models` folder. Record types must be serializable since Dapr persists workflow state.
+
+```csharp
+namespace <ProjectNamespace>.Models;
+
+public record WorkflowInput(string Message);
+public record WorkflowOutput(string Result);
+public record ActivityInput(string Data);
+public record ActivityOutput(string ProcessedData);
+```
+
+### Key points
+
+- Place all model record types in the `Models` folder/namespace.
+- Use `record` types for immutability and built-in serialization support.
+- Define separate input and output types for workflows and activities to keep contracts clear.
+- Record types should be `public` so they can be referenced across namespaces.
+
 ## Program.cs
 
 Use `AddDaprWorkflow` to register workflow and activity types. Use `DaprWorkflowClient` to schedule workflow instances and query their status via HTTP endpoints.
@@ -137,6 +164,7 @@ Use `AddDaprWorkflow` to register workflow and activity types. Use `DaprWorkflow
 using Dapr.Workflow;
 using <ProjectNamespace>;
 using <ProjectNamespace>.Activities;
+using <ProjectNamespace>.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDaprWorkflow(options =>
@@ -148,9 +176,10 @@ var app = builder.Build();
 
 app.MapPost("/start", async (DaprWorkflowClient workflowClient) =>
 {
+    var input = new WorkflowInput("Hello");
     var instanceId = await workflowClient.ScheduleNewWorkflowAsync(
         name: nameof(MyWorkflow),
-        input: "Hello");
+        input: input);
 
     return Results.Accepted(instanceId);
 });
@@ -175,39 +204,43 @@ app.Run();
 - `RegisterWorkflow<T>()` registers a workflow class.
 - `RegisterActivity<T>()` registers an activity class. Register each activity separately.
 - `DaprWorkflowClient` is injected via DI and used to schedule new workflow instances.
-- `ScheduleNewWorkflowAsync` starts a new workflow instance and returns the instance ID.
+- `ScheduleNewWorkflowAsync` starts a new workflow instance and returns the instance ID. Pass a model record as input.
 - `GetWorkflowStateAsync` retrieves the current status of a workflow instance by its instance ID. Check `state.Exists` to verify the instance was found.
-- Add `using` directives for the namespaces containing the workflow and activity classes.
+- Add `using` directives for the namespaces containing the workflow, activity, and model classes.
 
 ## Workflow Class
 
-A workflow class inherits from `Workflow<TInput, TOutput>` and overrides the `RunAsync` method. The workflow orchestrates one or more activities by calling `context.CallActivityAsync`.
+A workflow class inherits from `Workflow<TInput, TOutput>` and overrides the `RunAsync` method. The workflow orchestrates one or more activities by calling `context.CallActivityAsync`. Use record types from the `Models` folder for input and output.
 
 ```csharp
 using Dapr.Workflow;
+using <ProjectNamespace>.Activities;
+using <ProjectNamespace>.Models;
 
 namespace <ProjectNamespace>;
 
-internal sealed class MyWorkflow : Workflow<string, string>
+internal sealed class MyWorkflow : Workflow<WorkflowInput, WorkflowOutput>
 {
-    public override async Task<string> RunAsync(WorkflowContext context, string input)
+    public override async Task<WorkflowOutput> RunAsync(WorkflowContext context, WorkflowInput input)
     {
-        var result = await context.CallActivityAsync<string>(
+        var activityInput = new ActivityInput(input.Message);
+        var activityOutput = await context.CallActivityAsync<ActivityOutput>(
             nameof(MyActivity),
-            input);
+            activityInput);
 
-        return result;
+        return new WorkflowOutput(activityOutput.ProcessedData);
     }
 }
 ```
 
 ### Key points
 
-- The first generic type parameter (`TInput`) is the workflow input type.
-- The second generic type parameter (`TOutput`) is the workflow output type.
+- The first generic type parameter (`TInput`) is the workflow input type (e.g., `WorkflowInput`).
+- The second generic type parameter (`TOutput`) is the workflow output type (e.g., `WorkflowOutput`).
 - Use `context.CallActivityAsync<TOutput>(activityName, input)` to call an activity.
 - Use `nameof()` to reference activity names to avoid magic strings.
 - Activities can be chained by passing the output of one activity as the input to the next.
+- Map between workflow and activity model types as needed.
 - The workflow class should be `internal sealed`.
 
 ### Workflow determinism
@@ -219,27 +252,6 @@ Workflow code must be deterministic because the runtime may replay the `RunAsync
 - Random number generation.
 - Direct I/O operations (HTTP calls, file access, database queries) — perform these in activities instead.
 - `Thread.Sleep` or `Task.Delay` — use `context.CreateTimer()` instead.
-
-### Using custom input/output types
-
-Workflows and activities can use custom types for input and output instead of `string`. Define record or class types that are serializable:
-
-```csharp
-public record OrderRequest(string ProductId, int Quantity);
-public record OrderResult(string OrderId, string Status);
-
-internal sealed class OrderWorkflow : Workflow<OrderRequest, OrderResult>
-{
-    public override async Task<OrderResult> RunAsync(WorkflowContext context, OrderRequest input)
-    {
-        var result = await context.CallActivityAsync<OrderResult>(
-            nameof(ProcessOrderActivity),
-            input);
-
-        return result;
-    }
-}
-```
 
 ### Workflow patterns
 
@@ -318,27 +330,28 @@ internal sealed class ParentWorkflow : Workflow<string, string>
 
 ## Activity Class
 
-An activity class inherits from `WorkflowActivity<TInput, TOutput>` and overrides the `RunAsync` method. Activities contain the actual business logic.
+An activity class inherits from `WorkflowActivity<TInput, TOutput>` and overrides the `RunAsync` method. Activities contain the actual business logic. Use record types from the `Models` folder for input and output.
 
 ```csharp
 using Dapr.Workflow;
+using <ProjectNamespace>.Models;
 
 namespace <ProjectNamespace>.Activities;
 
-internal sealed class MyActivity : WorkflowActivity<string, string>
+internal sealed class MyActivity : WorkflowActivity<ActivityInput, ActivityOutput>
 {
-    public override Task<string> RunAsync(WorkflowActivityContext context, string input)
+    public override Task<ActivityOutput> RunAsync(WorkflowActivityContext context, ActivityInput input)
     {
-        Console.WriteLine($"{nameof(MyActivity)}: Received input: {input}.");
-        return Task.FromResult($"Processed: {input}");
+        Console.WriteLine($"{nameof(MyActivity)}: Received input: {input.Data}.");
+        return Task.FromResult(new ActivityOutput($"Processed: {input.Data}"));
     }
 }
 ```
 
 ### Key points
 
-- The first generic type parameter (`TInput`) is the activity input type.
-- The second generic type parameter (`TOutput`) is the activity output type.
+- The first generic type parameter (`TInput`) is the activity input type (e.g., `ActivityInput`).
+- The second generic type parameter (`TOutput`) is the activity output type (e.g., `ActivityOutput`).
 - The `RunAsync` method receives a `WorkflowActivityContext` and the input.
 - Activities should be `internal sealed`.
 - Place activity classes in an `Activities` folder/namespace for organization.
