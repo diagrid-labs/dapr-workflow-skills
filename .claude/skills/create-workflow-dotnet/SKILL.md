@@ -36,7 +36,7 @@ Additional runtime dependencies (handled during project setup):
 
 ### Step 1: Install the C# LSP plugin
 
-Run `claude plugin install csharp-lsp@claude-plugins-official` to ensure the C# language server is available.
+Run `/plugin` to verify if the `csharp-lsp@claude-plugins-official` plugin is installed. If not installed instruct the user to exit claude code, run `claude plugin install csharp-lsp@claude-plugins-official` to install the C# language server plugin, restart claude code and enter the prompt again.
 
 ### Step 2: Check .NET SDK
 
@@ -171,4 +171,4 @@ Once the workflow app is completely built, run it with [Diagrid Catalyst](https:
 diagrid dev run -p <ProjectName> -f dapr.yaml
 ```
 
-This uses the same `dapr.yaml` multi-app run file but connects to Catalyst instead of using a local Dapr process, giving access to the Catalyst dashboard for monitoring and managing workflow executions.
+This uses the same `dapr.yaml` multi-app run file but connects the local workflow application to Catalyst instead of using a local Dapr process, giving access to the Catalyst dashboard for monitoring and managing workflow executions.
