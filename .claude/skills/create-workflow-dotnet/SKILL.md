@@ -11,7 +11,10 @@ This skill describes how to create a Dapr Workflow application using .NET.
 
 ## Execution Order
 
-You MUST complete the prerequisite checks before proceeding to Project Setup. If any prerequisite is missing, inform the user with install instructions and do NOT continue until the issue is resolved.
+You MUST follow these phases in strict order:
+1. **Prerequisite Checks** — Run ALL checks. Stop if any fail.
+2. **Project Setup** — Create all files and folders.
+3. **Verify** — You MUST always end with the Verify section. Never skip it.
 
 ## Prerequisites
 
@@ -47,6 +50,8 @@ Run `docker info` to check if Docker is running. If that fails, run `podman info
 Run `dapr --version` to verify the Dapr CLI is installed. If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
 
 ## Project Setup
+
+> After completing all setup steps, you MUST proceed to the Verify section.
 
 Create the project root folder, then create a new ASP.NET Core web application inside it:
 
@@ -154,10 +159,11 @@ This uses the same `dapr.yaml` multi-app run file but connects to Catalyst inste
 
 ## Verify
 
-**IMPORTANT
-Always end the creation with these verification steps:**
+**IMPORTANT: You MUST end the creation steps with these verification steps:**
 
 1. Run `dotnet restore` on the csproj file to check for build errors.
 2. Run `dapr run -f .` in the project root to start the workflow app.
 3. Invoke the `/start` endpoint from the http file to start a workflow instance.
-4. Inspect the workflow execution using the Diagrid Dev dashboard.
+4. Inspect the workflow execution using the Diagrid Dev dashboard: `docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest`.
+
+**Do NOT consider the task complete until all 4 verification steps above have been suggested to the user.**
