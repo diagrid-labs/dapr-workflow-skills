@@ -199,13 +199,14 @@ internal sealed class MyWorkflow : Workflow<WorkflowInput, WorkflowOutput>
 
 ### Workflow determinism
 
-Workflow code must be deterministic because the runtime may replay the `RunAsync` method multiple times. Avoid the following inside a workflow:
+Workflow code must be deterministic because the runtime replays the `RunAsync` method multiple times to ensure workflow durability. Avoid the following inside a workflow:
 
 - `DateTime.Now` or `DateTime.UtcNow` — use `context.CurrentUtcDateTime` instead.
 - `Guid.NewGuid()` — use `context.NewGuid()` instead.
 - Random number generation.
 - Direct I/O operations (HTTP calls, file access, database queries) — perform these in activities instead.
 - `Thread.Sleep` or `Task.Delay` — use `context.CreateTimer()` instead.
+- while loops - use context.ContinueAsNew(<TInput>) instead.
 
 ### Workflow patterns
 
@@ -260,7 +261,7 @@ internal sealed class FanOutFanInWorkflow : Workflow<string[], string[]>
 }
 ```
 
-#### Sub-workflows
+#### Child-workflows
 
 Call another workflow from within a workflow using `context.CallChildWorkflowAsync`:
 
@@ -282,6 +283,33 @@ internal sealed class ParentWorkflow : Workflow<string, string>
 }
 ```
 
+#### Monitor pattern
+
+```csharp
+using Dapr.Workflow;
+
+namespace <ProjectNamespace>;
+
+internal sealed class MonitorWorkflow : Workflow<int, string>
+{
+    public override async Task<string> RunAsync(WorkflowContext context, int counter)
+    {
+        var status = await context.CallActivityAsync<Status>(
+            nameof(CheckStatus),
+            counter);
+
+        if (!status.IsReady)
+        {
+            await context.CreateTimer(TimeSpan.FromSeconds(30));
+            counter++;
+            context.ContinueAsNew(counter);
+        }
+
+        return $"Status is healthy after checking {counter} times.";
+    }
+}
+```
+
 ## Activity Class
 
 An activity class inherits from `WorkflowActivity<TInput, TOutput>` and overrides the `RunAsync` method. Activities contain the actual business logic. Use record types from the `Models` folder for input and output.
@@ -297,6 +325,9 @@ internal sealed class MyActivity : WorkflowActivity<ActivityInput, ActivityOutpu
     public override Task<ActivityOutput> RunAsync(WorkflowActivityContext context, ActivityInput input)
     {
         Console.WriteLine($"{nameof(MyActivity)}: Received input: {input.Data}.");
+        
+        // TODO: implement actual functionality
+        
         return Task.FromResult(new ActivityOutput($"Processed: {input.Data}"));
     }
 }
@@ -311,3 +342,4 @@ internal sealed class MyActivity : WorkflowActivity<ActivityInput, ActivityOutpu
 - Place activity classes in an `Activities` folder/namespace for organization.
 - If the activity method body is synchronous, return `Task.FromResult()` instead of marking the method `async`.
 - Activities are where non-deterministic and I/O operations should be performed (HTTP calls, database queries, file access, etc.).
+- If the exact functionality is unclear, add a `// TODO: implement actual functionality` statement inside the RunAsync method.
