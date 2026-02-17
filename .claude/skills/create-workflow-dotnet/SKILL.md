@@ -97,3 +97,16 @@ docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
 
 Then open `http://localhost:8080` in a browser to view workflow instances, their status, and execution history.
 
+## Running with Diagrid Catalyst
+
+[Diagrid Catalyst](https://catalyst.diagrid.io/) provides managed Dapr APIs with better workflow execution insights and easier workflow management through the Catalyst web UI.
+
+1. Sign up at [catalyst.diagrid.io](https://catalyst.diagrid.io/) and install the Diagrid CLI.
+2. Run the application from the project root:
+
+```shell
+diagrid dev run -f dapr.yaml
+```
+
+This uses the same `dapr.yaml` multi-app run file but connects to Catalyst instead of a local Dapr sidecar, giving access to the Catalyst dashboard for monitoring and managing workflow executions.
+
