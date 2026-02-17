@@ -390,7 +390,7 @@ Content-Type: application/json
 }
 
 ### Get the workflow status
-@instanceId = {{workflowStartRequest.response.body.$.instanceId}}
+@instanceId = {{workflowStartRequest.response.headers.location}}
 GET {{host}}/status?instanceId={{instanceId}}
 ```
 
