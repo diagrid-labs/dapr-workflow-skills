@@ -11,10 +11,11 @@ This skill describes how to create a Dapr Workflow application using .NET.
 
 ## Prerequisites
 
-- .NET 10 SDK
-- Dapr CLI
-- Docker (required for running Dapr locally with Redis)
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
+- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
+- Docker or Podman (required for running Dapr locally with Redis)
 - NuGet package: `Dapr.Workflow` version `1.16.1`
+- [Diagrid Dev Dashboard](https://www.diagrid.io/blog/improving-the-local-dapr-workflow-experience-diagrid-dashboard)
 
 ## Project Setup
 
