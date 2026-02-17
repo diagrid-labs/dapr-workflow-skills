@@ -31,6 +31,8 @@ dotnet new web -n <ProjectName>
 dotnet add <ProjectName> package Dapr.Workflow --version 1.16.1
 ```
 
+The <ProjectName> should start with the <ProjectRoot> and end with `App`: <ProjectRoot>App.
+
 ### Folder structure
 
 ```

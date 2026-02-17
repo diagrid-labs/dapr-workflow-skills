@@ -91,7 +91,6 @@ metadata:
 spec:
   type: state.redis
   version: v1
-  initTimeout: 1m
   metadata:
   - name: redisHost
     value: localhost:6379
@@ -198,7 +197,9 @@ app.MapPost("/start", async (
     return Results.Accepted(instanceId);
 });
 
-app.MapGet("/status", async (DaprWorkflowClient workflowClient, string instanceId) =>
+app.MapGet("/status", async (
+    [FromServices] DaprWorkflowClient workflowClient,
+    string instanceId) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     if (!state.Exists)
@@ -224,7 +225,7 @@ app.Run();
 
 ## Workflow Class
 
-A workflow class inherits from `Workflow<TInput, TOutput>` and overrides the `RunAsync` method. The workflow orchestrates one or more activities by calling `context.CallActivityAsync`. Use record types from the `Models` folder for input and output.
+A workflow class inherits from `Workflow<TInput, TOutput>` and overrides the `RunAsync` method. The workflow orchestrates one or more activities by calling `context.CallActivityAsync`. Use record types from the `Models` folder for input and output. Workflow class names should have a `Workflow` suffix.
 
 ```csharp
 using Dapr.Workflow;
@@ -402,7 +403,7 @@ GET {{host}}/status?instanceId={{instanceId}}
 
 ## Activity Class
 
-An activity class inherits from `WorkflowActivity<TInput, TOutput>` and overrides the `RunAsync` method. Activities contain the actual business logic. Use record types from the `Models` folder for input and output.
+An activity class inherits from `WorkflowActivity<TInput, TOutput>` and overrides the `RunAsync` method. Activities contain the actual business logic. Use record types from the `Models` folder for input and output. Activity class names should have an `Activity` suffix.
 
 ```csharp
 using Dapr.Workflow;
