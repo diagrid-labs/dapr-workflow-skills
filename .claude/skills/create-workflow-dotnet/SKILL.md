@@ -11,6 +11,9 @@ This skill describes how to create a Dapr Workflow application using .NET.
 
 ## Prerequisites
 
+This skill requires the C# LSP plugin that can be installed with  `claude plugin install csharp-lsp@claude-plugins-official`
+
+To build and run the .NET Dapr Workflow applications the following is required: 
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
 - Docker or Podman (required for running Dapr locally with Redis)
