@@ -115,6 +115,7 @@ public record ActivityOutput(string ProcessedData);
 Use `AddDaprWorkflow` to register workflow and activity types. Use `DaprWorkflowClient` to schedule workflow instances and query their status via HTTP endpoints.
 
 ```csharp
+using Microsoft.AspNetCore.Mvc;
 using Dapr.Workflow;
 using <ProjectNamespace>;
 using <ProjectNamespace>.Activities;
@@ -128,12 +129,14 @@ builder.Services.AddDaprWorkflow(options =>
 });
 var app = builder.Build();
 
-app.MapPost("/start", async (DaprWorkflowClient workflowClient) =>
+app.MapPost("/start", async (
+    [FromServices] DaprWorkflowClient workflowClient,
+    [FromBody] MyWorkflowInput workflowInput) =>
 {
-    var input = new WorkflowInput("Hello");
     var instanceId = await workflowClient.ScheduleNewWorkflowAsync(
         name: nameof(MyWorkflow),
-        input: input);
+        instanceId: workflowInput.Id,
+        input: workflowInput);
 
     return Results.Accepted(instanceId);
 });
@@ -309,6 +312,35 @@ internal sealed class MonitorWorkflow : Workflow<int, string>
     }
 }
 ```
+
+## local.http
+
+Create a `local.http` file in the project folder to test the workflow endpoints:
+
+```http
+@host = http://localhost:<app-port>
+
+### Start the workflow
+# @name workflowStartRequest
+POST {{host}}/start
+Content-Type: application/json
+
+{
+    "id": "{{$guid}}",
+    "key1": "value1"
+}
+
+### Get the workflow status
+@instanceId = {{workflowStartRequest.response.body.$.instanceId}}
+GET {{host}}/status?instanceId={{instanceId}}
+```
+
+### Key points
+
+- The `<app-port>` must match the port in `launchSettings.json` and `dapr.yaml`.
+- The `start` request matches the `MapPost("/start", ...)` endpoint in `Program.cs`. The json payload in the request should match the workflow input record type that uses the `[FromBody]` attribute in `Program.cs`.
+- The `status` request matches the `MapGet("/status", ...)` endpoint in `Program.cs`.
+- Use the VS Code REST Client extension or JetBrains HTTP Client to send requests directly from this file.
 
 ## Activity Class
 

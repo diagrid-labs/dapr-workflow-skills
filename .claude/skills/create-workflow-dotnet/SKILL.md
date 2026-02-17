@@ -36,6 +36,7 @@ dotnet add <ProjectName> package Dapr.Workflow --version 1.16.1
 ```
 <ProjectRoot>/
 ├── dapr.yaml
+├── local.http
 ├── resources/
 │   └── statestore.yaml
 └── <ProjectName>/
@@ -82,6 +83,10 @@ Inherits from `Workflow<TInput, TOutput>`, overrides `RunAsync`, and orchestrate
 
 Inherits from `WorkflowActivity<TInput, TOutput>`, overrides `RunAsync`, and contains the actual business logic. Must be `internal sealed`. Place in an `Activities` folder/namespace. See `reference.md` for full example and key points.
 
+## local.http
+
+HTTP request file for testing the workflow endpoints. Contains a `start` request (POST) to schedule a new workflow instance and a `status` request (GET) to query the workflow state. Uses the `<app-port>` from `launchSettings.json`. See `reference.md` for full example.
+
 ## Running Locally
 
 Start the application with the Dapr sidecar from the project root:
@@ -108,7 +113,7 @@ Then open `http://localhost:8080` in a browser to view workflow instances, their
 2. Run the application from the project root:
 
 ```shell
-diagrid dev run -f dapr.yaml
+diagrid dev run -p <ProjectName> -f dapr.yaml
 ```
 
 This uses the same `dapr.yaml` multi-app run file but connects to Catalyst instead of a local Dapr sidecar, giving access to the Catalyst dashboard for monitoring and managing workflow executions.
