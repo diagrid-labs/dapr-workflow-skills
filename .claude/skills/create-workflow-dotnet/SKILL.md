@@ -78,3 +78,21 @@ Inherits from `Workflow<TInput, TOutput>`, overrides `RunAsync`, and orchestrate
 ## Activity Class
 
 Inherits from `WorkflowActivity<TInput, TOutput>`, overrides `RunAsync`, and contains the actual business logic. Must be `internal sealed`. Place in an `Activities` folder/namespace. See `reference.md` for full example and key points.
+
+## Running Locally
+
+Start the application with the Dapr sidecar from the project root:
+
+```shell
+dapr run -f .
+```
+
+This reads the `dapr.yaml` multi-app run file and launches the app with its Dapr sidecar.
+
+To inspect workflow executions, run the Diagrid Dev Dashboard:
+
+```shell
+docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
+```
+
+Then open `http://localhost:8080` in a browser to view workflow instances, their status, and execution history.
