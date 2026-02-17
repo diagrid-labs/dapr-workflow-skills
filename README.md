@@ -10,7 +10,7 @@ This repository contains skill definitions that can be used with Claude Code to 
 
 - Clone this repo
 - Open a terminal and navigate to the cloned repo
-- Start Claude code
+- Start Claude Code
 - Use a prompt to build a Dapr workflow application (see the example below)
 
 ## Prompt example
