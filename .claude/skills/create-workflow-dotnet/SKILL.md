@@ -15,8 +15,8 @@ This skill describes how to create a Dapr Workflow application using .NET.
 You MUST follow these phases in strict order:
 1. **Prerequisite Checks** — Run ALL checks. Stop if any fail.
 2. **Project Setup** — Create all files and folders.
-3. **Verify** — Verify that the project builds, instructs the user to run and test locally.
-4. **Create README.md** — Create a readme that summarizes what is built and how to run the application.
+3. **Verify** — Verify that the project builds.
+4. **Create README.md** — Create a readme that summarizes what is built and how to run & test the application.
 
 ## Prerequisites
 
@@ -35,9 +35,9 @@ Additional runtime dependencies (handled during project setup):
 
 **IMPORTANT: Run ALL of these checks BEFORE creating any files or folders. If any check fails, stop and inform the user with the relevant install link from the Prerequisites section. Do NOT proceed to Project Setup until all checks pass.**
 
-### Step 1: Install the C# LSP plugin
+### Step 1: Check the C# LSP plugin
 
-Run `/plugin` to verify if the `csharp-lsp@claude-plugins-official` plugin is installed. If not installed instruct the user to exit claude code, run `claude plugin install csharp-lsp@claude-plugins-official` to install the C# language server plugin, restart claude code and enter the prompt again.
+Check if the `csharp-lsp@claude-plugins-official` plugin is installed. Do not run `claude plugin` from the session since that is not allowed. Check by inspecting the claude settings. If the plugin is not installed, instruct the user to exit claude code, run `claude plugin install csharp-lsp@claude-plugins-official` to install the C# language server plugin, restart claude code and enter the prompt again.
 
 ### Step 2: Check .NET SDK
 
@@ -52,8 +52,6 @@ Run `docker info` to check if Docker is running. If that fails, run `podman info
 Run `dapr --version` to verify the Dapr CLI is installed. If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
 
 ## Project Setup
-
-> After completing all setup steps, you MUST proceed to the Verify section.
 
 Create the project root folder, then create a new ASP.NET Core web application inside it:
 

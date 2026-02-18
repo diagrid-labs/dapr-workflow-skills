@@ -222,6 +222,7 @@ app.Run();
 - `DaprWorkflowClient` is injected via DI and used to schedule new workflow instances.
 - `ScheduleNewWorkflowAsync` starts a new workflow instance and returns the instance ID. Pass a model record as input.
 - `GetWorkflowStateAsync` retrieves the current status of a workflow instance by its instance ID. Check `state.Exists` to verify the instance was found.
+- Ensure the workflow output is included in the response when the `status` endpoint is called.
 - Add `using` directives for the namespaces containing the workflow, activity, and model classes.
 
 ## Workflow Class
@@ -378,7 +379,7 @@ internal sealed class MonitorWorkflow : Workflow<int, string>
 Create a `local.http` file in the project root to test the workflow endpoints:
 
 ```http
-@host = http://localhost:<app-port>
+@host=http://localhost:<app-port>
 
 ### Start the workflow
 # @name workflowStartRequest
@@ -391,7 +392,7 @@ Content-Type: application/json
 }
 
 ### Get the workflow status
-@instanceId = {{workflowStartRequest.response.headers.location}}
+@instanceId={{workflowStartRequest.response.headers.location}}
 GET {{host}}/status?instanceId={{instanceId}}
 ```
 
