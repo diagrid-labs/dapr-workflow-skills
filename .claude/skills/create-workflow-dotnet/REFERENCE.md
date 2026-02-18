@@ -102,7 +102,7 @@ spec:
 
 - The state store is required for workflow state persistence.
 - `actorStateStore` must be set to `"true"` because Dapr Workflow uses the actor framework internally.
-- This example uses Redis. Ensure Redis is running locally on port 6379 (e.g., `docker run -d -p 6379:6379 redis`).
+- This example uses Redis, which is installed in a container when using the Dapr CLI (`dapr init`).
 
 ## Properties/launchSettings.json
 

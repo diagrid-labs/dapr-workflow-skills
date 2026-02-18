@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo:*)",
+      "Bash(dapr:*)",
+      "Bash(dotnet:*)",
+      "Bash(docker info:*)",
+      "Bash(podman info:*)",
+      "Bash(powershell -Command:*)"
+    ]
+  }
+}
