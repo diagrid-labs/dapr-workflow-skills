@@ -1,6 +1,7 @@
 ---
 name: create-workflow-dotnet
 description: This skill creates a Dapr workflow application in .NET. Use this skill when the user asks to "create a workflow in .NET", "write a .NET workflow application" or "build a workflow app in C#".
+model: opus
 ---
 
 # Create Dapr Workflow .NET Application
