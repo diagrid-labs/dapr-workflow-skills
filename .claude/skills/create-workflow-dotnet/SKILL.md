@@ -17,6 +17,7 @@ You MUST follow these phases in strict order:
 2. **Project Setup** — Create all files and folders.
 3. **Verify** — Verify that the project builds.
 4. **Create README.md** — Create a readme that summarizes what is built and how to run & test the application.
+5. **Show final message** - Show a message in the terminal that instructs the user what to do next.
 
 ## Prerequisites
 
@@ -39,17 +40,21 @@ Additional runtime dependencies (handled during project setup):
 
 Check if the `csharp-lsp@claude-plugins-official` plugin is installed. Do not run `claude plugin` from the session since that is not allowed. Check by inspecting the claude settings. If the plugin is not installed, instruct the user to exit claude code, run `claude plugin install csharp-lsp@claude-plugins-official` to install the C# language server plugin, restart claude code and enter the prompt again.
 
-### Step 2: Check .NET SDK
+### Step 2: Detect Operating System
 
-Run `dotnet --version` and verify the output starts with `10.`. If not installed or the version is below 10, inform the user they need to install the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download).
+Run `uname -s 2>/dev/null || echo "Windows"` to determine the OS. On Windows, installed tools (dotnet, docker, dapr) are often only on the Windows PATH and not available in the bash shell used by Claude Code. For each subsequent check, if the direct bash command fails or is not found, retry it via PowerShell using `powershell -Command "<cmd>"` (Windows PowerShell) or `pwsh -Command "<cmd>"` (PowerShell 7+).
 
-### Step 3: Check Docker or Podman
+### Step 3: Check .NET SDK
 
-Run `docker info` to check if Docker is running. If that fails, run `podman info` to check for Podman. At least one container runtime must be available and running. If neither is available, inform the user they need to install [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation).
+Run `dotnet --version`. On Windows, if this fails, retry with `powershell -Command "dotnet --version"`. Verify the output starts with `10.`. If not installed or the version is below 10, inform the user they need to install the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download).
 
-### Step 4: Check Dapr CLI
+### Step 4: Check Docker or Podman
 
-Run `dapr --version` to verify the Dapr CLI is installed. If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
+Run `docker info` to check if Docker is running. On Windows, if this fails, retry with `powershell -Command "docker info"`. If Docker is unavailable, try `podman info` (or `powershell -Command "podman info"` on Windows). At least one container runtime must be available and running. If neither is available, inform the user they need to install [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation).
+
+### Step 5: Check Dapr CLI
+
+Run `dapr --version` to verify the Dapr CLI is installed. On Windows, if this fails, retry with `powershell -Command "dapr --version"`. If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
 
 ## Project Setup
 
@@ -126,8 +131,6 @@ Inherits from `WorkflowActivity<TInput, TOutput>`, overrides `RunAsync`, and con
 
 HTTP request file for testing the workflow endpoints. Contains a `start` request (POST) to schedule a new workflow instance and a `status` request (GET) to query the workflow state. Uses the `<app-port>` from `launchSettings.json`. See `REFERENCE.md` for full example.
 
-
-
 ## Verify
 
 **IMPORTANT: After Project Setup you MUST show these exact verification instructions:**
@@ -151,3 +154,9 @@ The README contains the following sections:
 7. How to run the application with Diagrid Catalyst to visually inspect the workflow.
 
 See `REFERENCE.md` for additional instructions on running locally and running with Catalyst.
+
+## Show final message
+
+**IMPORTANT: After Create README.me you MUST run these instructions:**
+
+- Show the following message in the terminal: "The <ProjectRoot> workflow application is created. Open the README.md in <ProjectRoot> for a summary and instructions for running locally."
