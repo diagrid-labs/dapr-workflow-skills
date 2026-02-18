@@ -54,7 +54,7 @@ Run `docker info` to check if Docker is running. On Windows, if this fails, retr
 
 ### Step 5: Check Dapr CLI
 
-Run `dapr --version` to verify the Dapr CLI is installed. On Windows, if this fails, retry with `powershell -Command "dapr --version"`. If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
+Run `dapr --version` to verify the Dapr CLI is installed. On Windows, if this fails, retry with `powershell -Command "dapr --version"`. Verify the output contains `1.16` If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
 
 ## Project Setup
 
@@ -146,7 +146,7 @@ Create a README.md file inside the <ProjectRoot> folder.
 
 The README contains the following sections:
 1. Summary of what this folder contains.
-2. Architecture description that explains the technology stack and prerequisites to run it locally.
+2. Architecture description that explains the technology stack and prerequisites to run it locally. **DO NOT suggest to run Redis separately since it's part of the Dapr installation and is running in a container already.**
 3. A mermaid diagram that explains the workflow.
 4. How to start the application using the Dapr CLI.
 5. List the available endpoints in the Program.cs file and provide examples how to call these using curl. Also include a link to the `local.http` file. 
@@ -159,4 +159,4 @@ See `REFERENCE.md` for additional instructions on running locally and running wi
 
 **IMPORTANT: This is the LAST step. After Create README.md, your final output MUST be ONLY the message below — no preamble, no summary, no additional commentary, only replace the <ProjectRoot> with the actual value:**
 
-The <ProjectRoot> workflow application is created. Open the README.md file in <ProjectRoot> for a summary and instructions for running locally.
+The <ProjectRoot> workflow application is created. Open the README.md file in the <ProjectRoot> folder for a summary and instructions for running locally.
