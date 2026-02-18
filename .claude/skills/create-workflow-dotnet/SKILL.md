@@ -17,7 +17,7 @@ You MUST follow these phases in strict order:
 2. **Project Setup** — Create all files and folders.
 3. **Verify** — Verify that the project builds.
 4. **Create README.md** — Create a readme that summarizes what is built and how to run & test the application.
-5. **Show final message** - Show a message in the terminal that instructs the user what to do next.
+5. **Show final message** - Your LAST output MUST be EXACTLY the message defined in the `## Show final message` section. Do NOT add any other text, summary, or commentary after it.
 
 ## Prerequisites
 
@@ -157,6 +157,6 @@ See `REFERENCE.md` for additional instructions on running locally and running wi
 
 ## Show final message
 
-**IMPORTANT: After Create README.me you MUST run these instructions:**
+**IMPORTANT: This is the LAST step. After Create README.md, your final output MUST be ONLY the message below — no preamble, no summary, no additional commentary, only replace the <ProjectRoot> with the actual value:**
 
-- Show the following message in the terminal: "The <ProjectRoot> workflow application is created. Open the README.md in <ProjectRoot> for a summary and instructions for running locally."
+The <ProjectRoot> workflow application is created. Open the README.md file in <ProjectRoot> for a summary and instructions for running locally.
