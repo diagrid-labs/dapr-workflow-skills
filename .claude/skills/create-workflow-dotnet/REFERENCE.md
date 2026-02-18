@@ -162,6 +162,7 @@ public record ActivityOutput(string ProcessedData);
 ### Key points
 
 - Place all model record types in the `Models` folder/namespace.
+- Put all model record types in one `cs` file.
 - Use `record` types for immutability and built-in serialization support.
 - Define separate input and output types for workflows and activities to keep contracts clear.
 - Record types should be `public` so they can be referenced across namespaces.
@@ -434,3 +435,34 @@ internal sealed class MyActivity : WorkflowActivity<ActivityInput, ActivityOutpu
 - If the activity method body is synchronous, return `Task.FromResult()` instead of marking the method `async`.
 - Activities are where non-deterministic and I/O operations should be performed (HTTP calls, database queries, file access, etc.).
 - If the exact functionality is unclear, add a `// TODO: implement actual functionality` statement inside the RunAsync method.
+
+## Running Locally
+
+Start the application using the Dapr CLI from the project root:
+
+```shell
+dapr run -f .
+```
+
+This reads the `dapr.yaml` multi-app run file and launches the app with its Dapr sidecar.
+
+To inspect workflow executions, run the Diagrid Dev Dashboard:
+
+```shell
+docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
+```
+
+Then open `http://localhost:8080` in a browser to view workflow instances, their status, and execution history.
+
+## Running with Diagrid Catalyst
+
+Once the workflow app is completely built, run it with [Diagrid Catalyst](https://catalyst.diagrid.io/) to visually inspect the workflow and perform workflow management operations.  
+
+1. Sign up at [catalyst.diagrid.io](https://catalyst.diagrid.io/) and install the [Diagrid CLI](https://docs.diagrid.io/references/catalyst-cli-reference/intro/).
+2. Run the application from the project root:
+
+```shell
+diagrid dev run -p <ProjectName> -f dapr.yaml
+```
+
+This uses the same `dapr.yaml` multi-app run file but connects the local workflow application to Catalyst instead of using a local Dapr process, giving access to the Catalyst dashboard for monitoring and managing workflow executions.
