@@ -4,7 +4,11 @@ This repository contains skill definitions that can be used with Claude Code to 
 
 ## Prerequisites
 
-- Claude Code
+- [Claude Code](https://claude.com/product/claude-code)
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
+- [C# LSP Plugin](https://claude.com/plugins/csharp-lsp)
+- [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
+- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
 
 ## How to use this
 
@@ -12,6 +16,8 @@ This repository contains skill definitions that can be used with Claude Code to 
 - Open a terminal and navigate to the cloned repo
 - Start Claude Code
 - Use a prompt to build a Dapr workflow application (see the example below)
+- Depending on your access permissions, you need to approve the usage of some tools during the generation of the .NET project.
+- Inspect the README.md file in the new folder after creation of the project.
 
 ## Prompt example
 
@@ -30,3 +36,5 @@ The input for the workflow contains the following fields:
 - Department
   
 The input records for the 4 parallel activities include the employeeId. The workflow output should include the employeeId.
+
+
