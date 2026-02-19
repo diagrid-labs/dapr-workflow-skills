@@ -42,19 +42,22 @@ Check if the `csharp-lsp@claude-plugins-official` plugin is installed. Do not ru
 
 ### Step 2: Detect Operating System
 
-Run `uname -s 2>/dev/null || echo "Windows"` to determine the OS. On Windows, installed tools (dotnet, docker, dapr) are often only on the Windows PATH and not available in the bash shell used by Claude Code. For each subsequent check, if the direct bash command fails or is not found, retry it via PowerShell using `powershell -Command "<cmd>"` (Windows PowerShell) or `pwsh -Command "<cmd>"` (PowerShell 7+).
+Run `uname -s 2>/dev/null || echo "Windows"` to determine the OS:
+- **macOS**: `uname -s` returns `Darwin`. All tools are expected to be available in bash.
+- **Linux**: `uname -s` returns `Linux`. All tools are expected to be available in bash.
+- **Windows**: returns `Windows`. Tools may only be on the Windows PATH and not available in the bash shell. For each subsequent check, if the direct bash command fails, retry via `powershell -Command "<cmd>"` (Windows PowerShell) or `pwsh -Command "<cmd>"` (PowerShell 7+).
 
 ### Step 3: Check .NET SDK
 
-Run `dotnet --version`. On Windows, if this fails, retry with `powershell -Command "dotnet --version"`. Verify the output starts with `10.`. If not installed or the version is below 10, inform the user they need to install the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download).
+Run `dotnet --version` (on Windows, retry with `powershell -Command "dotnet --version"` if needed). Verify the output starts with `10.`. If not installed or the version is below 10, inform the user they need to install the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download).
 
 ### Step 4: Check Docker or Podman
 
-Run `docker info` to check if Docker is running. On Windows, if this fails, retry with `powershell -Command "docker info"`. If Docker is unavailable, try `podman info` (or `powershell -Command "podman info"` on Windows). At least one container runtime must be available and running. If neither is available, inform the user they need to install [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation).
+Run `docker info` (on Windows, retry with `powershell -Command "docker info"` if needed). If Docker is unavailable, try `podman info` (on Windows, retry with `powershell -Command "podman info"` if needed). At least one container runtime must be available and running. If neither is available, inform the user they need to install [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation).
 
 ### Step 5: Check Dapr CLI
 
-Run `dapr --version` to verify the Dapr CLI is installed. On Windows, if this fails, retry with `powershell -Command "dapr --version"`. Verify the output contains `1.16` If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
+Run `dapr --version` (on Windows, retry with `powershell -Command "dapr --version"` if needed). Verify the output contains `1.16`. If not installed, inform the user they need to install the [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/).
 
 ## Project Setup
 
