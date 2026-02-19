@@ -463,7 +463,7 @@ Once the workflow app is completely built, run it with [Diagrid Catalyst](https:
 2. Run the application from the project root:
 
 ```shell
-diagrid dev run -p <ProjectName> -f dapr.yaml
+diagrid dev run --project <ProjectName> -f dapr.yaml --approve
 ```
 
 This uses the same `dapr.yaml` multi-app run file but connects the local workflow application to Catalyst instead of using a local Dapr process, giving access to the Catalyst dashboard for monitoring and managing workflow executions.

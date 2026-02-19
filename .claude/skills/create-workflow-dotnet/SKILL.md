@@ -16,7 +16,7 @@ You MUST follow these phases in strict order:
 1. **Prerequisite Checks** — Run ALL checks. Stop if any fail.
 2. **Project Setup** — Create all files and folders.
 3. **Verify** — Verify that the project builds.
-4. **Create README.md** — Create a readme that summarizes what is built and how to run & test the application.
+4. **Create README.md** — Create a readme that summarizes what is built and how to run & test the application. Do not provide instructions at the end of this phase.
 5. **Show final message** - Your LAST output MUST be EXACTLY the message defined in the `## Show final message` section. Do NOT add any other text, summary, or commentary after it.
 
 ## Prerequisites
