@@ -6,13 +6,26 @@ This repository contains Claude Code skill definitions for building Dapr Workflo
 
 - `.claude/skills/` — Skill files organized by language/framework
   - `create-workflow-dotnet/SKILL.md` — Skill for creating Dapr Workflow apps with .NET
+  - `create-workflow-dotnet/REFERENCE.md` — Detailed reference examples for the .NET skill
+
+## Repository prerequisites
+
+The following tools must be installed to use any skill in this repo:
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
+- [C# LSP Plugin](https://claude.com/plugins/csharp-lsp)
+- [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
+- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.16+)
 
 ## Guidelines for skill files
 
 - Skill files are Markdown documents in `.claude/skills/<skill-name>/SKILL.md`
-- Each skill should include: front-matter with the name and description, and sections for: prerequisites, project setup, folder structure, and code examples
+- Each skill directory should also include a `REFERENCE.md` with full code examples and detailed explanations
+- Skill front-matter fields: `name`, `description`, `model` (e.g. `opus`)
+- Each skill should include sections for: prerequisite checks, project setup, folder structure, verify, and a final message
 - Use `<PlaceholderName>` syntax for values the user should replace (e.g., `<ProjectName>`, `<ProjectNamespace>`)
 - Code examples should be complete and runnable, not snippets
-- The SKILL.md file should be minimal and refer to a REFERENCE.md file with more explanations and details
+- The SKILL.md file should be minimal; detailed code examples belong in `REFERENCE.md`
 - Include "Key points" sections after code examples to explain important concepts
-- Reference official Dapr quickstarts as the source of truth for patterns and conventions
+- Skills must perform all prerequisite checks before creating any files
+- Skills must be able to work on MacOS, Linux, and Windows environments.
